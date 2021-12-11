@@ -2,7 +2,7 @@ package com.emmanueltorty.walletapp.exceptions;
 
 import java.io.Serializable;
 
-class UniqueFieldException extends Exception implements Serializable{
+public class UniqueFieldException extends Exception implements Serializable{
 	
 	/**
 	 * 

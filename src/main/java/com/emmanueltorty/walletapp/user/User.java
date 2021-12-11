@@ -21,7 +21,6 @@ public class User {
   @Size(min=5, message="Enter a minimum of 5 characters.")
   private String name;
 
-  @NotNull(message="Email field cannot be null!")
   @Email
   private String email;
   
