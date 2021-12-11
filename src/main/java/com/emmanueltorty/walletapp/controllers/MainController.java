@@ -1,5 +1,6 @@
 package com.emmanueltorty.walletapp.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.emmanueltorty.walletapp.exceptions.UniqueFieldException;
 import com.emmanueltorty.walletapp.jwtsecurity.AuthenticationRequest;
 import com.emmanueltorty.walletapp.jwtsecurity.AuthenticationResponse;
+import com.emmanueltorty.walletapp.jwtsecurity.util.JwtUtil;
 import com.emmanueltorty.walletapp.user.User;
 import com.emmanueltorty.walletapp.user.UserService;
 
@@ -42,5 +44,14 @@ public class MainController {
 		
 		return this.userService.authenticateUser(authReq);
 	}
+	
+	@GetMapping("/me")
+	public @ResponseBody User createWallet(HttpServletRequest req) 
+			throws Exception {
+		
+		return this.userService.getUserFromToken(req);
+	}
+	
+	
 
 }

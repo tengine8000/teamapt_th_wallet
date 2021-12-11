@@ -10,6 +10,9 @@ import javax.validation.constraints.Size;
 
 import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Validated
 @Entity
 public class User {
@@ -26,6 +29,7 @@ public class User {
   
   @NotNull(message="Password cannot be null")
   @Size(min=8, message="Password must be at least 8 characters long!")
+  @JsonIgnore
   private String password;
 
   public String getPassword() {

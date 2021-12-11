@@ -2,12 +2,15 @@ package com.emmanueltorty.walletapp.user;
 
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -36,7 +39,7 @@ public class UserService {
 	private AuthenticationManager authMgr;
 	
 	@Autowired
-	private JwtUtil jwtTokenUtil;
+	private JwtUtil jwtUtil;
 	
 	
 	public UserService() {
@@ -73,8 +76,16 @@ public class UserService {
 		}
 		
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authReq.getUsername());
-		final String jwt = jwtTokenUtil.generateToken(userDetails);
+		final String jwt = jwtUtil.generateToken(userDetails);
 		return ResponseEntity.ok(new AuthenticationResponse(jwt, "Authenticated!"));
 	}
+	
+	public @ResponseBody User getUserFromToken(HttpServletRequest req) 
+	{
+		String token = req.getHeader("Authorization").replace("Bearer ","");
+		return userRepo.findByEmail(jwtUtil.extractUsername(token)).get();
+	}
+		
+		
 
 }
