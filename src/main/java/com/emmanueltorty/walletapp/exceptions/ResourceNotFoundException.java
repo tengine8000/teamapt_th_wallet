@@ -2,7 +2,7 @@ package com.emmanueltorty.walletapp.exceptions;
 
 import java.io.Serializable;
 
-class ResourceNotFoundException extends Exception implements Serializable{
+public class ResourceNotFoundException extends Exception implements Serializable{
 	
 	/**
 	 * 

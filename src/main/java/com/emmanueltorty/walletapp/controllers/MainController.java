@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emmanueltorty.walletapp.exceptions.UniqueFieldException;
+import com.emmanueltorty.walletapp.exceptions.WalletException;
 import com.emmanueltorty.walletapp.jwtsecurity.AuthenticationRequest;
 import com.emmanueltorty.walletapp.jwtsecurity.AuthenticationResponse;
 import com.emmanueltorty.walletapp.jwtsecurity.util.JwtUtil;
 import com.emmanueltorty.walletapp.user.User;
 import com.emmanueltorty.walletapp.user.UserService;
+import com.emmanueltorty.walletapp.wallet.Wallet;
 
 
 @RestController
@@ -52,6 +54,10 @@ public class MainController {
 		return this.userService.getUserFromToken(req);
 	}
 	
-	
+	@PostMapping("/create_wallet")
+	public ResponseEntity<?> makeWallet(HttpServletRequest req) 
+			throws WalletException {
+		return this.userService.makeUserWallet(req);
+	}
 
 }

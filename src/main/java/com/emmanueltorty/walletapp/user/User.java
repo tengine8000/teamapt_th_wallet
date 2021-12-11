@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Validated
+//@Validated
 @Entity
 public class User {
   @Id

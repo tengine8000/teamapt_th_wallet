@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import io.jsonwebtoken.MalformedJwtException;
+
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -77,13 +79,37 @@ public class GlobalExceptionHandler {
 		
 	}
 	
+	// handle specific exceptions
+	@ExceptionHandler(WalletException.class)
+	public ResponseEntity<?> handleWalletException(WalletException ex, WebRequest request)
+	{
+		err.setTimestamp(new Date());
+		err.setMessage("Wallet Error!");
+		err.setDetails(ex.getMessage());
+		
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+		
+	}
+	// handle specific exceptions
+	@ExceptionHandler(MalformedJwtException.class)
+	public ResponseEntity<?> handleWalletException(MalformedJwtException ex, WebRequest request)
+	{
+		err.setTimestamp(new Date());
+		err.setMessage("Malformed JWT Exception Error!");
+		err.setDetails(ex.getMessage());
+		
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+		
+	}
+	
 	// handle global exceptions
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleException(Exception ex, WebRequest request)
 	{
 		err.setTimestamp(new Date());
-		err.setMessage(ex.getMessage());
+		err.setMessage(ex.toString());
 		err.setDetails(request.getDescription(false));
+		System.out.print(ex);
 		
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 		
