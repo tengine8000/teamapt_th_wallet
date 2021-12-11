@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -53,6 +54,18 @@ public class GlobalExceptionHandler {
 		
 	}
 	// handle specific exceptions
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex, WebRequest request)
+	{
+		err.setTimestamp(new Date());
+		err.setMessage("Bad Credentials Error");
+		err.setDetails(ex.getMessage());
+		
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+		
+	}
+	
+	// handle specific exceptions
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request)
 	{
@@ -64,7 +77,7 @@ public class GlobalExceptionHandler {
 		
 	}
 	
-	// handle specific exceptions
+	// handle global exceptions
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleException(Exception ex, WebRequest request)
 	{
@@ -72,12 +85,8 @@ public class GlobalExceptionHandler {
 		err.setMessage(ex.getMessage());
 		err.setDetails(request.getDescription(false));
 		
-		return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 		
 	}
-	
-	
-	// handle global exceptions
-	
 
 }

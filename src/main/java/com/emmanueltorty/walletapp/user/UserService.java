@@ -3,11 +3,21 @@ package com.emmanueltorty.walletapp.user;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.emmanueltorty.walletapp.exceptions.*;
+import com.emmanueltorty.walletapp.exceptions.UniqueFieldException;
+import com.emmanueltorty.walletapp.jwtsecurity.AuthenticationRequest;
+import com.emmanueltorty.walletapp.jwtsecurity.AuthenticationResponse;
+import com.emmanueltorty.walletapp.jwtsecurity.MyUserDetailsService;
+import com.emmanueltorty.walletapp.jwtsecurity.util.JwtUtil;
 
 
 @Component
@@ -18,6 +28,15 @@ public class UserService {
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private MyUserDetailsService userDetailsService;
+	
+	@Autowired
+	private AuthenticationManager authMgr;
+	
+	@Autowired
+	private JwtUtil jwtTokenUtil;
 	
 	
 	public UserService() {
@@ -40,6 +59,22 @@ public class UserService {
 		
 		userRepo.save(user);
 		return "New User " + user.getName() + " with email, "+ user.getEmail()+", successfully created;";
+	}
+	
+	public ResponseEntity<?> authenticateUser(AuthenticationRequest authReq) throws Exception
+	{
+		try {
+			
+			authMgr.authenticate(new UsernamePasswordAuthenticationToken(authReq.getUsername(), authReq.getPassword()));
+		}
+		
+		catch (Exception e) {
+			throw new Exception("Authentication error! Please check your email or password");
+		}
+		
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authReq.getUsername());
+		final String jwt = jwtTokenUtil.generateToken(userDetails);
+		return ResponseEntity.ok(new AuthenticationResponse(jwt, "Authenticated!"));
 	}
 
 }
