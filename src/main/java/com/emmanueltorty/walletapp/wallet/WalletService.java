@@ -55,4 +55,14 @@ public class WalletService implements IWallet {
 	}
 
 
+	public BigDecimal getUserWalletBalance(String ownerID) throws WalletException
+	{
+		Optional<Wallet> existingWallet = walletRepo.findByOwnerID(ownerID);
+		if (existingWallet.isPresent()) 
+			return existingWallet.get().getBalance();
+		else
+			throw new WalletException("User has no wallet!");
+	}
+
+
 }

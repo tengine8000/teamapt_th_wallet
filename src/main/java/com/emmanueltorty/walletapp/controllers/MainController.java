@@ -59,5 +59,11 @@ public class MainController {
 			throws WalletException {
 		return this.userService.makeUserWallet(req);
 	}
+	
+	@GetMapping("/get_wallet_balance")
+	public ResponseEntity<?> getWalletBalance(HttpServletRequest req) 
+			throws WalletException {
+		return this.userService.getWalletBalance(req);
+	}
 
 }

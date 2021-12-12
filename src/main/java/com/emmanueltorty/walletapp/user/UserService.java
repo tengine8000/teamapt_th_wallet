@@ -95,6 +95,12 @@ public class UserService {
 		User user = this.getUserFromToken(req);
 		return ResponseEntity.ok(this.walletService.createUserWallet(String.valueOf(user.getId())));
 	}
+
+	public ResponseEntity<?> getWalletBalance(HttpServletRequest req) throws WalletException
+	{
+		User user = this.getUserFromToken(req);
+		return ResponseEntity.ok(this.walletService.getUserWalletBalance(String.valueOf(user.getId())));
+	}
 		
 
 }
