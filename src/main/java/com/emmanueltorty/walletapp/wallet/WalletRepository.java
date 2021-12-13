@@ -10,13 +10,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional(readOnly = true)
 public interface WalletRepository extends CrudRepository<Wallet, Long> {
 	
 	public Optional<Wallet> findByOwnerID(String ownerID);
 	
-	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	
 	@Modifying(clearAutomatically=true, flushAutomatically=true)
 	@Query("update Wallet w set w.balance = :balance where w.ownerID = :ownerID")
 	public int UpdateWalletByOwnerID(@Param("ownerID") String ownerID, @Param("balance") BigDecimal balance);

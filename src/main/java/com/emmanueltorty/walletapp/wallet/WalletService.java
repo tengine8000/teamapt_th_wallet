@@ -1,6 +1,7 @@
 package com.emmanueltorty.walletapp.wallet;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,26 @@ public class WalletService implements IWallet {
 			return existingWallet.get().getBalance();
 		else
 			throw new WalletException("User has no wallet!");
+	}
+
+
+	public BigDecimal depositUserWallet(String ownerID, String amount) throws WalletException
+	{
+		Optional<Wallet> Owallet = walletRepo.findByOwnerID(ownerID);
+		BigDecimal zeroAmount = new BigDecimal("0");
+		Wallet wallet = null;
+		
+		if(Owallet.isPresent()) {
+			wallet = Owallet.get();
+			BigDecimal depositAmount = new BigDecimal(amount).setScale(2, RoundingMode.DOWN);
+			if(depositAmount.compareTo(zeroAmount) <= 0) 
+			{
+				throw new WalletException("Deposit cannot be zero or negative!");
+			}
+			
+			walletRepo.UpdateWalletByOwnerID(ownerID, wallet.getBalance().add(depositAmount));
+		}
+		return wallet.getBalance();
 	}
 
 

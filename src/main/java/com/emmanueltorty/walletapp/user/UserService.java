@@ -1,5 +1,6 @@
 package com.emmanueltorty.walletapp.user;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,10 +97,18 @@ public class UserService {
 		return ResponseEntity.ok(this.walletService.createUserWallet(String.valueOf(user.getId())));
 	}
 
-	public ResponseEntity<?> getWalletBalance(HttpServletRequest req) throws WalletException
+	public BigDecimal getWalletBalance(HttpServletRequest req) throws WalletException
 	{
 		User user = this.getUserFromToken(req);
-		return ResponseEntity.ok(this.walletService.getUserWalletBalance(String.valueOf(user.getId())));
+		return this.walletService.getUserWalletBalance(String.valueOf(user.getId()));
+	}
+	
+	public BigDecimal depositWallet(HttpServletRequest req, String amount) throws WalletException
+	{
+		User user = this.getUserFromToken(req);
+		return this
+				.walletService
+				.depositUserWallet(String.valueOf(user.getId()), amount);
 	}
 		
 

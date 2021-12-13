@@ -20,6 +20,8 @@ import com.emmanueltorty.walletapp.jwtsecurity.util.JwtUtil;
 import com.emmanueltorty.walletapp.user.User;
 import com.emmanueltorty.walletapp.user.UserService;
 import com.emmanueltorty.walletapp.wallet.Wallet;
+import com.emmanueltorty.walletapp.wallet.requests.WalletDepositRequest;
+import com.emmanueltorty.walletapp.wallet.responses.WalletResponse;
 
 
 @RestController
@@ -61,9 +63,20 @@ public class MainController {
 	}
 	
 	@GetMapping("/get_wallet_balance")
-	public ResponseEntity<?> getWalletBalance(HttpServletRequest req) 
+	public @ResponseBody WalletResponse getWalletBalance(HttpServletRequest req) 
 			throws WalletException {
-		return this.userService.getWalletBalance(req);
+		return new WalletResponse(this.userService.getWalletBalance(req).toString(), "Available Balance");
+	}
+	
+	@PostMapping("/deposit")
+	public @ResponseBody WalletResponse depositWallet(HttpServletRequest req, @Valid @RequestBody WalletDepositRequest wdr) 
+			throws WalletException {
+		
+		if (wdr == null) {
+			throw new WalletException("You have not supplied the amount to deposit!");
+		}
+		
+		return new WalletResponse(this.userService.depositWallet(req, wdr.getAmount()).toString(), "Amount Deposited successfully!");
 	}
 
 }
