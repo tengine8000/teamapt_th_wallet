@@ -13,7 +13,7 @@ import com.emmanueltorty.walletapp.user.User;
 
 @Service
 @Transactional
-public class WalletService implements IWallet {
+public class WalletService {
 	
 	@Autowired
 	private WalletRepository walletRepo;
@@ -35,25 +35,6 @@ public class WalletService implements IWallet {
 		
 		return walletRepo.save(wallet);
 	}
-	
-
-	@Override
-	public BigDecimal deposit(BigDecimal amount) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BigDecimal withdraw(BigDecimal amount) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BigDecimal transfer(String sourceWalletID, String destWalletID, BigDecimal amount) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 	public BigDecimal getUserWalletBalance(String ownerID) throws WalletException
@@ -68,21 +49,44 @@ public class WalletService implements IWallet {
 
 	public BigDecimal depositUserWallet(String ownerID, String amount) throws WalletException
 	{
-		Optional<Wallet> Owallet = walletRepo.findByOwnerID(ownerID);
+		Wallet wallet = this.getUserWallet(ownerID);
 		BigDecimal zeroAmount = new BigDecimal("0");
-		Wallet wallet = null;
+		BigDecimal depositAmount = new BigDecimal(amount).setScale(2, RoundingMode.DOWN);
+		if(depositAmount.compareTo(zeroAmount) <= 0) 
+		{
+			throw new WalletException("Deposit cannot be zero or negative!");
+		}
+			
+		walletRepo.UpdateWalletByOwnerID(ownerID, wallet.getBalance().add(depositAmount));
+		return wallet.getBalance();
+	}
+
+
+	public BigDecimal withdrawUserWallet(String ownerID, String amount) throws WalletException
+	{
+		Wallet wallet = this.getUserWallet(ownerID);
+		BigDecimal withdrawAmount = new BigDecimal(amount).setScale(2, RoundingMode.DOWN);
 		
+		if (wallet.getBalance().compareTo(withdrawAmount) < 0) {
+			throw new WalletException("Insufficient funds to withdraw!");
+		}
+		
+		walletRepo.UpdateWalletByOwnerID(ownerID, wallet.getBalance().subtract(withdrawAmount));
+		return wallet.getBalance();
+	}
+	
+	private Wallet getUserWallet(String ownerID) throws WalletException
+	{
+		Optional<Wallet> Owallet = walletRepo.findByOwnerID(ownerID);
+		Wallet wallet = null;
 		if(Owallet.isPresent()) {
 			wallet = Owallet.get();
-			BigDecimal depositAmount = new BigDecimal(amount).setScale(2, RoundingMode.DOWN);
-			if(depositAmount.compareTo(zeroAmount) <= 0) 
-			{
-				throw new WalletException("Deposit cannot be zero or negative!");
-			}
-			
-			walletRepo.UpdateWalletByOwnerID(ownerID, wallet.getBalance().add(depositAmount));
+					
+		}else {
+			throw new WalletException("Wallet not found for user!");
 		}
-		return wallet.getBalance();
+		
+		return wallet;
 	}
 
 

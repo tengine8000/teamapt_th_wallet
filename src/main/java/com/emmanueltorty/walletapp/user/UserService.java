@@ -110,6 +110,14 @@ public class UserService {
 				.walletService
 				.depositUserWallet(String.valueOf(user.getId()), amount);
 	}
+	
+	public BigDecimal withdrawWallet(HttpServletRequest req, String amount) throws WalletException
+	{
+		User user = this.getUserFromToken(req);
+		return this
+				.walletService
+				.withdrawUserWallet(String.valueOf(user.getId()), amount);
+	}
 		
 
 }
