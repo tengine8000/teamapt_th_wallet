@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -96,6 +97,17 @@ public class GlobalExceptionHandler {
 	{
 		err.setTimestamp(new Date());
 		err.setMessage("Malformed JWT Exception Error!");
+		err.setDetails(ex.getMessage());
+		
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+		
+	}
+	// handle specific exceptions
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request)
+	{
+		err.setTimestamp(new Date());
+		err.setMessage("HTTP Error!");
 		err.setDetails(ex.getMessage());
 		
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);

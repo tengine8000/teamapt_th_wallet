@@ -58,7 +58,7 @@ public class WalletService {
 		}
 			
 		walletRepo.UpdateWalletByOwnerID(ownerID, wallet.getBalance().add(depositAmount));
-		return wallet.getBalance();
+		return this.getUserWallet(ownerID).getBalance();
 	}
 
 
@@ -66,13 +66,18 @@ public class WalletService {
 	{
 		Wallet wallet = this.getUserWallet(ownerID);
 		BigDecimal withdrawAmount = new BigDecimal(amount).setScale(2, RoundingMode.DOWN);
+		BigDecimal zeroAmount = new BigDecimal("0").setScale(2, RoundingMode.DOWN);
+		
+		if (withdrawAmount.compareTo(zeroAmount) <= 0) {
+			throw new WalletException("Invalid amount to withdraw!");
+		}
 		
 		if (wallet.getBalance().compareTo(withdrawAmount) < 0) {
 			throw new WalletException("Insufficient funds to withdraw!");
 		}
 		
 		walletRepo.UpdateWalletByOwnerID(ownerID, wallet.getBalance().subtract(withdrawAmount));
-		return wallet.getBalance();
+		return this.getUserWallet(ownerID).getBalance();
 	}
 	
 	public BigDecimal transferUserWallet(String ownerID, String receiverID, String amount) 
@@ -81,6 +86,11 @@ public class WalletService {
 		Wallet userWallet = this.getUserWallet(ownerID);
 		Wallet receipientWallet = this.getUserWallet(receiverID);
 		BigDecimal transferAmount = new BigDecimal(amount).setScale(2, RoundingMode.DOWN);
+		BigDecimal zeroAmount = new BigDecimal("0").setScale(2, RoundingMode.DOWN);
+		
+		if (transferAmount.compareTo(zeroAmount) <= 0) {
+			throw new WalletException("Invalid amount to transfer!");
+		}
 		
 		if (userWallet.getBalance().compareTo(transferAmount) < 0) {
 			throw new WalletException("Insufficient funds to transfer!");
@@ -93,7 +103,7 @@ public class WalletService {
 		walletRepo.UpdateWalletByOwnerID(userWallet.getOwnerID(), userWallet.getBalance().subtract(transferAmount));
 		walletRepo.UpdateWalletByOwnerID(receipientWallet.getOwnerID(), receipientWallet.getBalance().add(transferAmount));
 		
-		return userWallet.getBalance();	
+		return this.getUserWallet(ownerID).getBalance();	
 	}
 	
 	private Wallet getUserWallet(String ownerID) throws WalletException

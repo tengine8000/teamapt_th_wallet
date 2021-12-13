@@ -5,32 +5,29 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-//@Validated
+@Validated
 @Entity
 public class User {
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
   private long id;
 
-  @NotNull
+  @NotEmpty
   @Size(min=5, message="Enter a minimum of 5 characters.")
   private String name;
 
-  @NotNull(message="Email cannot be null")
+  @NotEmpty(message="Email cannot be null")
   @Email
   private String email;
   
-  @NotNull(message="Password cannot be null")
   @Size(min=8, message="Password must be at least 8 characters long!")
-  @JsonIgnore
   private String password;
 
   public String getPassword() {

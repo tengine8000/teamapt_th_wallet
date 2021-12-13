@@ -19,6 +19,7 @@ import com.emmanueltorty.walletapp.jwtsecurity.AuthenticationResponse;
 import com.emmanueltorty.walletapp.jwtsecurity.util.JwtUtil;
 import com.emmanueltorty.walletapp.user.User;
 import com.emmanueltorty.walletapp.user.UserService;
+import com.emmanueltorty.walletapp.user.responses.UserProfileResponse;
 import com.emmanueltorty.walletapp.wallet.Wallet;
 import com.emmanueltorty.walletapp.wallet.requests.WalletDepositRequest;
 import com.emmanueltorty.walletapp.wallet.requests.WalletTransferRequest;
@@ -39,23 +40,25 @@ public class MainController {
 	}
 	
 	@PostMapping("/register")
-	public @ResponseBody String register(@Valid @RequestBody User user) throws UniqueFieldException
+	public @ResponseBody String register(@Valid @RequestBody User user) throws Exception
 	{
 		return this.userService.registerNewUser(user);	
 	}
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> createAuthToken(@RequestBody AuthenticationRequest authReq) 
-			throws Exception {
-		
+			throws Exception 
+	{
+		System.out.println(authReq.getUsername());
+		System.out.println(authReq.getPassword());
 		return this.userService.authenticateUser(authReq);
 	}
 	
 	@GetMapping("/me")
-	public @ResponseBody User createWallet(HttpServletRequest req) 
+	public @ResponseBody UserProfileResponse createWallet(HttpServletRequest req) 
 			throws Exception {
-		
-		return this.userService.getUserFromToken(req);
+		User user = this.userService.getUserFromToken(req);
+		return new UserProfileResponse(user.getId(), user.getName(), user.getEmail());
 	}
 	
 	@PostMapping("/create_wallet")

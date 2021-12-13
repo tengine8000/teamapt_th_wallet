@@ -61,7 +61,9 @@ public class UserService {
 		
 		Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
 		
-		if(existingUser.isPresent()) throw new UniqueFieldException("Email Taken!");
+		if(existingUser.isPresent()) {
+			throw new UniqueFieldException("Email Taken!");
+		}
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
