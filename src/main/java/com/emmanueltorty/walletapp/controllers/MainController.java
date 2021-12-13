@@ -21,6 +21,7 @@ import com.emmanueltorty.walletapp.user.User;
 import com.emmanueltorty.walletapp.user.UserService;
 import com.emmanueltorty.walletapp.wallet.Wallet;
 import com.emmanueltorty.walletapp.wallet.requests.WalletDepositRequest;
+import com.emmanueltorty.walletapp.wallet.requests.WalletTransferRequest;
 import com.emmanueltorty.walletapp.wallet.requests.WalletWithdrawRequest;
 import com.emmanueltorty.walletapp.wallet.responses.WalletResponse;
 
@@ -89,6 +90,21 @@ public class MainController {
 		}
 		
 		return new WalletResponse(this.userService.withdrawWallet(req, wwr.getAmount()).toString(), "Amount Withdrawn successfully!");
+	}
+	
+	@PostMapping("/transfer")
+	public @ResponseBody WalletResponse transferWallet(HttpServletRequest req, @Valid @RequestBody WalletTransferRequest wtr) 
+			throws WalletException {
+		
+		if (wtr == null) {
+			throw new WalletException("You have not supplied the amount to deposit!");
+		}
+		
+		return new WalletResponse(
+				this.userService.transferWallet(
+							req, wtr.getReceiverID(), 
+							wtr.getAmount().toString()).toString(), 
+				"Amount Transferred successfully!");
 	}
 
 }

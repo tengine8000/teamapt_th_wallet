@@ -118,6 +118,20 @@ public class UserService {
 				.walletService
 				.withdrawUserWallet(String.valueOf(user.getId()), amount);
 	}
+
+	public BigDecimal transferWallet(HttpServletRequest req, String receiverID, String amount) throws WalletException {
+		User user = this.getUserFromToken(req);
+		User receiver = null;
+		Optional<User> oReceiver = userRepo.findById(Long.valueOf(receiverID));
+		if(oReceiver.isPresent())
+			receiver = oReceiver.get();
+		else
+			throw new WalletException("Receiver wallet does not exist.");
+		
+		return this
+				.walletService
+				.transferUserWallet(String.valueOf(user.getId()),String.valueOf(receiver.getId()), amount);
+	}
 		
 
 }

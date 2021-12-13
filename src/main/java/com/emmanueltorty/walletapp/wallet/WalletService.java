@@ -75,6 +75,27 @@ public class WalletService {
 		return wallet.getBalance();
 	}
 	
+	public BigDecimal transferUserWallet(String ownerID, String receiverID, String amount) 
+			throws WalletException
+	{
+		Wallet userWallet = this.getUserWallet(ownerID);
+		Wallet receipientWallet = this.getUserWallet(receiverID);
+		BigDecimal transferAmount = new BigDecimal(amount).setScale(2, RoundingMode.DOWN);
+		
+		if (userWallet.getBalance().compareTo(transferAmount) < 0) {
+			throw new WalletException("Insufficient funds to transfer!");
+		}
+		
+		if (userWallet.getId() == receipientWallet.getId()) {
+			throw new WalletException("Error! Receiver ID same as your ID. You may use /deposit API endpoint to fund your wallet!");
+		}
+		
+		walletRepo.UpdateWalletByOwnerID(userWallet.getOwnerID(), userWallet.getBalance().subtract(transferAmount));
+		walletRepo.UpdateWalletByOwnerID(receipientWallet.getOwnerID(), receipientWallet.getBalance().add(transferAmount));
+		
+		return userWallet.getBalance();	
+	}
+	
 	private Wallet getUserWallet(String ownerID) throws WalletException
 	{
 		Optional<Wallet> Owallet = walletRepo.findByOwnerID(ownerID);
@@ -88,6 +109,8 @@ public class WalletService {
 		
 		return wallet;
 	}
+
+
 
 
 }

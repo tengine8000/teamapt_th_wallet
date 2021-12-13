@@ -1,5 +1,7 @@
 package com.emmanueltorty.walletapp.wallet.responses;
 
+import java.math.BigDecimal;
+
 public class WalletResponse {
 	
 	private String availableBalance;
@@ -15,7 +17,7 @@ public class WalletResponse {
 		this.availableBalance = availableBal;
 		this.message = message;
 	}
-	
+
 	public String getAvailableBalance() {
 		return availableBalance;
 	}
