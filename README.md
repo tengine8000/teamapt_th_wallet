@@ -1,7 +1,7 @@
 ## 💼 &nbsp; About TeamApt_TH Project
 
 
-This project is an implementation of an RESTful wallet application. It is built with Java and Spring Boot framework. I used the SpringToolSuite version 4 to build it.
+This project is an implementation of a RESTful wallet application. It is built with Java and Spring Boot framework. I used the SpringToolSuite version 4 IDE to build it.
 
 The following endpoints are available in the application
 
@@ -18,20 +18,19 @@ The following endpoints are available in the application
 ```
 ### 🛠 &nbsp; Installation
 
-This project was built with the popular SpringToolSuite Framework with ```Maven``` build tool.
+This project was built with the popular SpringToolSuite IDE with ```Maven``` build tool.
 
 Follow the steps below to have it running on your local system:
 
 Steps:
 - clone the repository ```git clone https://github.com/tengine8000/teamapt_th_wallet.git```
 - Change directory into the project folder ```cd teamapt_th_wallet/```
-- Run ```composer update``` to install al the required packages
 - Setup your local ```MySQL``` database using the example configuratiion found in ```application.properties``` file in the ```src/main/resources``` folder.
 - Run the application with ```./mvnw spring-boot:run``` in the root directory.
 
 ### ⚙️ &nbsp; Running and Testing
 
-After successfully running the application, you can test
+After successfully running the application, you can test it via making API calls to the above-listed endpoints.
 
 
 - To make API calls, you can use ```curl```, [Postman](https://www.postman.com/), or [REST Client plugin](https://github.com/Huachao/vscode-restclient) if you are using [VSCode](https://code.visualstudio.com/)<img src="https://raw.githubusercontent.com/ABSphreak/ABSphreak/master/gifs/Hi.gif" width="20px" />
