@@ -49,8 +49,6 @@ public class MainController {
 	public ResponseEntity<?> createAuthToken(@RequestBody AuthenticationRequest authReq) 
 			throws Exception 
 	{
-		System.out.println(authReq.getUsername());
-		System.out.println(authReq.getPassword());
 		return this.userService.authenticateUser(authReq);
 	}
 	
