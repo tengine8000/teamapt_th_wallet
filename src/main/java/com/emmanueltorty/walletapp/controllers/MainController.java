@@ -87,7 +87,7 @@ public class MainController {
 			throws WalletException {
 		
 		if (wwr == null) {
-			throw new WalletException("You have not supplied the amount to deposit!");
+			throw new WalletException("You have not supplied the amount to withdraw!");
 		}
 		
 		return new WalletResponse(this.userService.withdrawWallet(req, wwr.getAmount()).toString(), "Amount Withdrawn successfully!");
@@ -98,7 +98,7 @@ public class MainController {
 			throws WalletException {
 		
 		if (wtr == null) {
-			throw new WalletException("You have not supplied the amount to deposit!");
+			throw new WalletException("You have not supplied the amount to transfer!");
 		}
 		
 		return new WalletResponse(
